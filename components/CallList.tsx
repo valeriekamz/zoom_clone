@@ -94,9 +94,14 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
             //   meeting.state?.startsAt.toLocaleString() ||
             //   meeting.start_time.toLocaleString()
             // }
+            // date={
+            //   meeting.state?.startsAt.toLocaleString() ||
+            //   ("start_time" in meeting && meeting.start_time?.toLocaleString())
+            // }
             date={
-              meeting.state?.startsAt.toLocaleString() ||
-              ("start_time" in meeting && meeting.start_time?.toLocaleString())
+              'state' in meeting ? 
+                (meeting as Call).state?.startsAt.toLocaleString() : 
+                (meeting as CallRecording).start_time?.toLocaleString()
             }
             isPreviousMeeting={type === "ended"}
             buttonIcon1={type === "recordings" ? "/icons/play.svg" : undefined}
