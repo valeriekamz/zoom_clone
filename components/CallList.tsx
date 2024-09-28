@@ -18,7 +18,7 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
   const router = useRouter();
   const [recordings, setRecordings] = useState<CallRecording[]>([]);
 
-  const {toast} = useToast();
+  const { toast } = useToast();
   const getCalls = () => {
     switch (type) {
       case "ended":
@@ -51,14 +51,14 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
         const callData = await Promise.all(
           callRecordings.map((meeting) => meeting.queryRecordings())
         );
-  
+
         const recordings = callData
           .filter((call) => call.recordings.length > 0)
           .flatMap((call) => call.recordings);
-  
+
         setRecordings(recordings);
-      } catch{
-        toast({title: 'Try again later'});
+      } catch {
+        toast({ title: "Try again later" });
       }
     };
     if (type === "recordings") fetchRecordings();
@@ -82,12 +82,21 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
                 ? "/icons/upcoming.svg"
                 : "/icons/recordings.svg"
             }
+            // title={
+            //   (meeting as Call).state?.custom?.description?.substring(0, 26) || meeting.filename?.substring(0, 20) || "Personal Meeting"
+            // }
             title={
-              (meeting as Call).state?.custom?.description?.substring(0, 26) || meeting.filename?.substring(0, 20) || "Personal Meeting"
+              (meeting as Call).state?.custom?.description?.substring(0, 26) ||
+              ("filename" in meeting && meeting.filename?.substring(0, 20)) ||
+              "Personal Meeting"
             }
+            // date={
+            //   meeting.state?.startsAt.toLocaleString() ||
+            //   meeting.start_time.toLocaleString()
+            // }
             date={
               meeting.state?.startsAt.toLocaleString() ||
-              meeting.start_time.toLocaleString()
+              ("start_time" in meeting && meeting.start_time?.toLocaleString())
             }
             isPreviousMeeting={type === "ended"}
             buttonIcon1={type === "recordings" ? "/icons/play.svg" : undefined}
